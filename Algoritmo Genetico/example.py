@@ -1,7 +1,7 @@
 import pygad
 import numpy
 
-num_generations = 50 # Number of generations.
+num_generations = 1 # Number of generations.
 sol_per_pop = 8 # Number of solutions in the population.
 num_parents_mating = 4 # Number of solutions to be selected as parents in the mating pool.
 
@@ -32,10 +32,10 @@ num_genes = len(function_inputs)
 def fitness_func(solution):
     # Calculating the fitness value of each solution in the current population.
     # The fitness function calulates the sum of products between each input and its corresponding weight.
-    if (numpy.sum(solution)==1):
-        output = numpy.sum(solution)/(numpy.sum(solution*function_inputs)+alfa_value)
-        fitness = 1.0 / numpy.abs(output - desired_output)
-    else:
+    #if (numpy.sum(solution)==1):
+    output = numpy.sum(solution)/(numpy.sum(solution*function_inputs)+alfa_value)
+    fitness = 1.0 / numpy.abs(output - desired_output)
+    #else:
         
     return fitness
 
