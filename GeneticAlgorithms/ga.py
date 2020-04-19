@@ -1,5 +1,7 @@
+#!/usr/bin/python
 import random
 import math
+
 
 def generate_population(size, x_boundaries, y_boundaries):
     lower_x_boundary, upper_x_boundary = x_boundaries
@@ -85,7 +87,6 @@ def make_next_generation(previous_population):
 
 def main():
     generations = 100
-
     population = generate_population(size=10, x_boundaries=(-4, 4), y_boundaries=(-4, 4))
 
     i = 1
@@ -100,11 +101,12 @@ def main():
 
         i += 1
 
-        population = make_next_generation(population)
+        # population = make_next_generation(population)
 
-    best_individual = sort_population_by_fitness(population)[-1]
-    print("\n🔬 FINAL RESULT")
-    print(best_individual, apply_function(best_individual))
+    # best_individual = sort_population_by_fitness(population)[-1]
+    # print("\n🔬 FINAL RESULT")
+    # print(best_individual, apply_function(best_individual))
 
 if __name__ == "__main__":
     main()
+
