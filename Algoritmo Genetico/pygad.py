@@ -60,7 +60,8 @@ class GA:
                  mutation_percent_genes=10,
                  mutation_num_genes=None,
                  random_mutation_min_val=-1.0,
-                 random_mutation_max_val=1.0):
+                 random_mutation_max_val=1.0,
+                 alfa_value=3):
 
         # Validating the number of solutions in the population (sol_per_pop) and the number of parents to be selected for mating (num_parents_mating)
         if (sol_per_pop <= 0 or num_parents_mating <= 0):
@@ -205,7 +206,7 @@ class GA:
         self.pop_size = (self.sol_per_pop,self.num_genes) # The population will have sol_per_pop chromosome where each chromosome has num_genes genes.
         # Creating the initial population randomly.
         while sum_pesos != 1:
-            self.population = numpy.random.uniform(low=0 high=1 size=self.pop_size)
+            self.population = numpy.random.uniform(low=0, high=1, size=self.pop_size)
             sum_pesos = numpy.sum(self.population)
         
 
@@ -451,6 +452,7 @@ class GA:
             crossover_point1 = numpy.random.randint(low=0, high=numpy.ceil(parents.shape[1]/2 + 1), size=1)[0]
 
         crossover_point2 = crossover_point1 + int(parents.shape[1]/2) # The second point must always be greater than the first point.
+
 
         for k in range(offspring_size[0]):
             # Index of the first parent to mate.
