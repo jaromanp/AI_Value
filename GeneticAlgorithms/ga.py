@@ -23,19 +23,23 @@ def generate_population(size, w1_boundaries, w2_boundaries, w3_boundaries, w4_bo
     return population
 
 def apply_function(individual):
-    x1 = 20
-    x2 = 45
-    x3 = 72
-    x4 = 1
-    x5 = 59
-    alfa = 5
+    x1 = 700000
+    x2 = 1000000
+    x3 = 800000
+    x4 = 1000000
+    x5 = 600000
+    alfa = 500
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
     w4 = individual["w4"]
     w5 = individual["w5"]
     numerator = (w1 + w2 + w3 + w4 + w5)
-    function_result = (numerator/(alfa + (w1*x1) + (w2*x2) + (w3*x3) + (w4*x4) + (w5*x5)))
+    if numerator == 1:
+        function_result = (((numerator/(alfa + (w1*x1) + (w2*x2) + (w3*x3) + (w4*x4) + (w5*x5))))/1)
+    else:
+        penalty = ((999999)*((1-numerator)**2))
+        function_result = ((((numerator/(alfa + (w1*x1) + (w2*x2) + (w3*x3) + (w4*x4) + (w5*x5)))-(penalty)))/1)
     return function_result
 
 def choice_by_roulette(sorted_population, fitness_sum):
@@ -80,13 +84,15 @@ def crossover(individual_a, individual_b):
 
 
 def mutate(individual):
-    next_w1 = individual["w1"] + random.uniform(-0.05, 0.05)
-    next_w2 = individual["w2"] + random.uniform(-0.05, 0.05)
-    next_w3 = individual["w3"] + random.uniform(-0.05, 0.05)
-    next_w4 = individual["w4"] + random.uniform(-0.05, 0.05)
-    next_w5 = individual["w5"] + random.uniform(-0.05, 0.05)
+    min_value = -0.00025
+    max_value = 0.00025
+    next_w1 = individual["w1"] + random.uniform(min_value, max_value)
+    next_w2 = individual["w2"] + random.uniform(min_value, max_value)
+    next_w3 = individual["w3"] + random.uniform(min_value, max_value)
+    next_w4 = individual["w4"] + random.uniform(min_value, max_value)
+    next_w5 = individual["w5"] + random.uniform(min_value, max_value)
 
-    lower_boundary, upper_boundary = (-4, 4)
+    lower_boundary, upper_boundary = (0, 1)
 
     # Guarantee we keep inside boundaries
     next_w1 = min(max(next_w1, lower_boundary), upper_boundary)
@@ -116,8 +122,10 @@ def make_next_generation(previous_population):
     return next_generation
 
 def main():
-    generations = 100
-    population = generate_population(size=10, w1_boundaries=(0, 1), w2_boundaries=(0, 1), w3_boundaries=(0, 1), w4_boundaries=(0, 1), w5_boundaries=(0, 1))
+    generations = 5000
+    min_value = 0
+    max_value = 0.85
+    population = generate_population(size=10, w1_boundaries=(min_value, max_value), w2_boundaries=(min_value, max_value), w3_boundaries=(min_value, max_value), w4_boundaries=(min_value, max_value), w5_boundaries=(min_value, max_value))
 
     i = 1
     while True:
