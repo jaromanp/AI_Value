@@ -9,17 +9,30 @@ def generate_population(size, x_boundaries, y_boundaries):
     population = []
     for i in range(size):
         individual = {
-            "x": random.uniform(lower_x_boundary, upper_x_boundary),
-            "y": random.uniform(lower_y_boundary, upper_y_boundary),
+            "w1": random.uniform(lower_x_boundary, upper_x_boundary),
+            "w2": random.uniform(lower_y_boundary, upper_y_boundary),
+            "w3": random.uniform(lower_y_boundary, upper_y_boundary),
+            "w4": random.uniform(lower_y_boundary, upper_y_boundary),
+            "w5": random.uniform(lower_y_boundary, upper_y_boundary),
         }
         population.append(individual)
 
     return population
 
 def apply_function(individual):
-    x = individual["x"]
-    y = individual["y"]
-    return math.sin(math.sqrt(x ** 2 + y ** 2))    
+    x1 = 20
+    x2 = 45
+    x3 = 72
+    x4 = 1
+    x5 = 59
+    alfa = 5
+    w1 = individual["w1"]
+    w2 = individual["w2"]
+    w3 = individual["w3"]
+    w4 = individual["w4"]
+    w5 = individual["w5"]
+    function_result = ((w1 + w2 + w3 + w4 + w5)/())
+    return 
 
 def choice_by_roulette(sorted_population, fitness_sum):
     offset = 0
@@ -90,10 +103,10 @@ def main():
 
     i = 1
     while True:
-        print(f"🧬 GENERATION {i}")
+        # print(f"🧬 GENERATION {i}")
 
-        for individual in population:
-            print(individual, apply_function(individual))
+        # for individual in population:
+        #     print(individual, apply_function(individual))
 
         if i == generations:
             break
@@ -103,7 +116,7 @@ def main():
         population = make_next_generation(population)
 
     best_individual = sort_population_by_fitness(population)[-1]
-    print("\n🔬 FINAL RESULT")
+    # print("\n🔬 FINAL RESULT")
     print(best_individual, apply_function(best_individual))
 
 if __name__ == "__main__":
