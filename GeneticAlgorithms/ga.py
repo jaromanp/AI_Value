@@ -2,18 +2,21 @@
 import random
 import math
 
-def generate_population(size, x_boundaries, y_boundaries):
-    lower_x_boundary, upper_x_boundary = x_boundaries
-    lower_y_boundary, upper_y_boundary = y_boundaries
+def generate_population(size, w1_boundaries, w2_boundaries, w3_boundaries, w4_boundaries, w5_boundaries):
+    lower_w1_boundary, upper_w1_boundary = w1_boundaries
+    lower_w2_boundary, upper_w2_boundary = w2_boundaries
+    lower_w3_boundary, upper_w3_boundary = w3_boundaries
+    lower_w4_boundary, upper_w4_boundary = w4_boundaries
+    lower_w5_boundary, upper_w5_boundary = w5_boundaries
 
     population = []
     for i in range(size):
         individual = {
-            "w1": random.uniform(lower_x_boundary, upper_x_boundary),
-            "w2": random.uniform(lower_y_boundary, upper_y_boundary),
-            "w3": random.uniform(lower_y_boundary, upper_y_boundary),
-            "w4": random.uniform(lower_y_boundary, upper_y_boundary),
-            "w5": random.uniform(lower_y_boundary, upper_y_boundary),
+            "w1": random.uniform(lower_w1_boundary, upper_w1_boundary),
+            "w2": random.uniform(lower_w2_boundary, upper_w2_boundary),
+            "w3": random.uniform(lower_w3_boundary, upper_w3_boundary),
+            "w4": random.uniform(lower_w4_boundary, upper_w4_boundary),
+            "w5": random.uniform(lower_w5_boundary, upper_w5_boundary),
         }
         population.append(individual)
 
@@ -31,8 +34,9 @@ def apply_function(individual):
     w3 = individual["w3"]
     w4 = individual["w4"]
     w5 = individual["w5"]
-    function_result = ((w1 + w2 + w3 + w4 + w5)/())
-    return 
+    numerator = (w1 + w2 + w3 + w4 + w5)
+    function_result = (numerator/(alfa + (w1*x1) + (w2*x2) + (w3*x3) + (w4*x4) + (w5*x5)))
+    return function_result
 
 def choice_by_roulette(sorted_population, fitness_sum):
     offset = 0
@@ -59,26 +63,40 @@ def sort_population_by_fitness(population):
 
 
 def crossover(individual_a, individual_b):
-    xa = individual_a["x"]
-    ya = individual_a["y"]
+    w1a = individual_a["w1"]
+    w2a = individual_a["w2"]
+    w3a = individual_a["w3"]
+    w4a = individual_a["w4"]
+    w5a = individual_a["w5"]
 
-    xb = individual_b["x"]
-    yb = individual_b["y"]
+    w1b = individual_b["w1"]
+    w2b = individual_b["w2"]
+    w3b = individual_b["w3"]
+    w4b = individual_b["w4"]
+    w5b = individual_b["w5"]
 
-    return {"x": (xa + xb) / 2, "y": (ya + yb) / 2}
+    result_crossover = {"w1": (w1a + w1b) / 2, "w2": (w2a + w2b) / 2, "w3": (w3a + w3b) / 2, "w4": (w4a + w4b) / 2, "w5": (w5a + w5b) / 2}
+    return result_crossover
 
 
 def mutate(individual):
-    next_x = individual["x"] + random.uniform(-0.05, 0.05)
-    next_y = individual["y"] + random.uniform(-0.05, 0.05)
+    next_w1 = individual["w1"] + random.uniform(-0.05, 0.05)
+    next_w2 = individual["w2"] + random.uniform(-0.05, 0.05)
+    next_w3 = individual["w3"] + random.uniform(-0.05, 0.05)
+    next_w4 = individual["w4"] + random.uniform(-0.05, 0.05)
+    next_w5 = individual["w5"] + random.uniform(-0.05, 0.05)
 
     lower_boundary, upper_boundary = (-4, 4)
 
     # Guarantee we keep inside boundaries
-    next_x = min(max(next_x, lower_boundary), upper_boundary)
-    next_y = min(max(next_y, lower_boundary), upper_boundary)
+    next_w1 = min(max(next_w1, lower_boundary), upper_boundary)
+    next_w2 = min(max(next_w2, lower_boundary), upper_boundary)
+    next_w3 = min(max(next_w3, lower_boundary), upper_boundary)
+    next_w4 = min(max(next_w4, lower_boundary), upper_boundary)
+    next_w5 = min(max(next_w5, lower_boundary), upper_boundary)
 
-    return {"x": next_x, "y": next_y}
+    result_mutation = {"w1": next_w1, "w2": next_w2, "w3": next_w3, "w4": next_w4, "w5": next_w5}
+    return result_mutation
 
 
 def make_next_generation(previous_population):
@@ -99,14 +117,14 @@ def make_next_generation(previous_population):
 
 def main():
     generations = 100
-    population = generate_population(size=10, x_boundaries=(-4, 4), y_boundaries=(-4, 4))
+    population = generate_population(size=10, w1_boundaries=(0, 1), w2_boundaries=(0, 1), w3_boundaries=(0, 1), w4_boundaries=(0, 1), w5_boundaries=(0, 1))
 
     i = 1
     while True:
-        # print(f"🧬 GENERATION {i}")
+        #print(f"🧬 GENERATION {i}")
 
-        # for individual in population:
-        #     print(individual, apply_function(individual))
+        #for individual in population:
+        #    print(individual, apply_function(individual))
 
         if i == generations:
             break
@@ -116,7 +134,7 @@ def main():
         population = make_next_generation(population)
 
     best_individual = sort_population_by_fitness(population)[-1]
-    # print("\n🔬 FINAL RESULT")
+    print("\n🔬 FINAL RESULT")
     print(best_individual, apply_function(best_individual))
 
 if __name__ == "__main__":
