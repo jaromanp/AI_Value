@@ -23,12 +23,12 @@ def generate_population(size, w1_boundaries, w2_boundaries, w3_boundaries, w4_bo
     return population
 
 def apply_function(individual):
-    x1 = 700000
-    x2 = 1000000
-    x3 = 800000
-    x4 = 1000000
-    x5 = 600000
-    alfa = 500
+    x1 = 0.08
+    x2 = 0.15
+    x3 = 0.25
+    x4 = 0.14
+    x5 = 0.02
+    alfa = 0.01
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
@@ -38,7 +38,7 @@ def apply_function(individual):
     if numerator == 1:
         function_result = (((numerator/(alfa + (w1*x1) + (w2*x2) + (w3*x3) + (w4*x4) + (w5*x5))))/1)
     else:
-        penalty = ((999999)*((1-numerator)**2))
+        penalty = ((999999)*((1-numerator)**1))
         function_result = ((((numerator/(alfa + (w1*x1) + (w2*x2) + (w3*x3) + (w4*x4) + (w5*x5)))-(penalty)))/1)
     return function_result
 
