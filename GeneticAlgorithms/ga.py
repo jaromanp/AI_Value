@@ -161,7 +161,7 @@ def make_next_generation(previous_population):
     return next_generation
 
 def main():
-    generations = 5000
+    generations = 2000
     #min_value = 0
     #max_value = 0.85
     population = generate_population(size=10, w1_boundaries=(0.0002, 405424332.26), w2_boundaries=(0.00019, 131706692),
