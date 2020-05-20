@@ -47,7 +47,8 @@ def read_csv():
     filas_n, columnas_n = df_N.count()-1, len(df_N.columns)-1
     dataset_N = df_N.values
     u_fcf = dataset_N[filas_d, columnas_d][1]
-    return min_D, min_N, max_N, max_D, u_fcf, d_fcf
+    ##Falta idear una forma en la que se pueda pasar u_fcf y d_fcf a apply function que no se por parametro
+    return min_D, min_N, max_N, max_D
 
 def generate_population(min_D):
     population = []
@@ -217,7 +218,8 @@ def main():
     generations = 2000
     #min_value = 0
     #max_value = 0.85
-    population = generate_population(size=10)
+    #No estoy seguro pero creo necesito verificacion por parte de otro programador gracias
+    population = generate_population(size=10, read_csv())
 
     i = 1
     while True:
