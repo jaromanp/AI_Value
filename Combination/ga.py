@@ -1,26 +1,59 @@
 #!/usr/bin/python
 import random
 import math
+import pandas as pd
 
-def generate_population(size, w1_boundaries, w2_boundaries, w3_boundaries, w4_boundaries, w5_boundaries,
-w6_boundaries, w7_boundaries, w8_boundaries, w9_boundaries, w10_boundaries, w11_boundaries, w12_boundaries):
-    lower_w1_boundary, upper_w1_boundary = w1_boundaries
-    lower_w2_boundary, upper_w2_boundary = w2_boundaries
-    lower_w3_boundary, upper_w3_boundary = w3_boundaries
-    lower_w4_boundary, upper_w4_boundary = w4_boundaries
-    lower_w5_boundary, upper_w5_boundary = w5_boundaries
-    lower_w6_boundary, upper_w6_boundary = w6_boundaries
-    lower_w7_boundary, upper_w7_boundary = w7_boundaries
-    lower_w8_boundary, upper_w8_boundary = w8_boundaries
-    lower_w9_boundary, upper_w9_boundary = w9_boundaries
-    lower_w10_boundary, upper_w10_boundary = w10_boundaries
-    lower_w11_boundary, upper_w11_boundary = w11_boundaries
-    lower_w12_boundary, upper_w12_boundary = w12_boundaries
+def read_csv():
+    #Leyendo archivo
+    df = pd.read_csv('InterpolatedWithCAPEX2.csv')
+    df_N = pd.read_csv('InterpolatedNum.csv')
+    max_D = {'D REVENUE':df['D REVENUE'].max(), 'U CR':df['U CR'].max(), 'D OE':df['D OE'].max(), 
+       'D NOI':df['D NOI'].max(),'U CAPEX':df['U CAPEX'].max(), 'U CWK':df['U CWK'].max()} 
+    min_D = {'D REVENUE':df['D REVENUE'].min(), 'U CR':df['U CR'].min(), 'D OE':df['D OE'].min(), 
+       'D NOI':df['D NOI'].min(),'U CAPEX':df['U CAPEX'].min(), 'U CWK':df['U CWK'].min()}
+    max_N = {'U REVENUE':df_N['U REVENUE'].max(), 'D CR':df_N['D CR'].max(), 'U OE':df_N['U OE'].max(), 
+       'U NOI':df_N['U NOI'].max(),'D CAPEX':df_N['D CAPEX'].max(), 'D CWK':df_N['D CWK'].max()} 
+    min_N = {'U REVENUE':df_N['U REVENUE'].min(), 'D CR':df_N['D CR'].min(), 'U OE':df_N['U OE'].min(), 
+       'U NOI':df_N['U NOI'].min(),'D CAPEX':df_N['D CAPEX'].min(), 'D CWK':df_N['D CWK'].min()}
+    
+    # min_D['D REVENUE'] = lower_w1_boundary
+    # max_D['D REVENUE'] = upper_w1_boundary
+    # min_D['U CR'] = lower_w2_boundary
+    # max_D['U CR'] = upper_w2_boundary
+    # min_D['D OE'] = lower_w3_boundary
+    # max_D['D OE'] = upper_w3_boundary
+    # min_D['D NOI'] = lower_w4_boundary
+    # max_D['D NOI'] = upper_w4_boundary
+    # min_D['U CAPEX'] = lower_w5_boundary 
+    # max_D['U CAPEX'] = upper_w5_boundary
+    # min_D['U CWK'] = lower_w6_boundary
+    # max_D['U CWK'] = upper_w6_boundary
+    # min_N['U REVENUE'] = lower_w7_boundary 
+    # max_N['U REVENUE'] = upper_w7_boundary
+    # min_N['D CR'] = lower_w8_boundary
+    # max_N['D CR'] = upper_w8_boundary
+    # min_N['U OE'] = lower_w9_boundary
+    # max_N['U OE'] = upper_w9_boundary
+    # min_N['U NOI'] = lower_w10_boundary
+    # max_N['U NOI'] = upper_w10_boundary
+    # min_N['D CAPEX'] = lower_w11_boundary
+    # max_N['D CAPEX'] = upper_w11_boundary
+    # min_N['D CWK'] = lower_w12_boundary
+    # max_N['D CWK'] = upper_w12_boundary
+    filas_d, columnas_d = df.count()-1, len(df.columns)-1
+    dataset_D = df.values
+    #Variables a pasar a la funcion generate_population
+    d_fcf = dataset_D[filas_d, columnas_d][1]
+    filas_n, columnas_n = df_N.count()-1, len(df_N.columns)-1
+    dataset_N = df_N.values
+    u_fcf = dataset_N[filas_d, columnas_d][1]
+    return min_D, min_N, max_N, max_D, u_fcf, d_fcf
 
+def generate_population(min_D):
     population = []
     for i in range(size):
         individual = {
-            "w1": random.uniform(lower_w1_boundary, upper_w1_boundary),
+            "w1": random.uniform(min_D['D REVENUE'], upper_w1_boundary),
             "w2": random.uniform(lower_w2_boundary, upper_w2_boundary),
             "w3": random.uniform(lower_w3_boundary, upper_w3_boundary),
             "w4": random.uniform(lower_w4_boundary, upper_w4_boundary),
@@ -34,6 +67,8 @@ w6_boundaries, w7_boundaries, w8_boundaries, w9_boundaries, w10_boundaries, w11_
             "w12": random.uniform(lower_w12_boundary, upper_w12_boundary),
         }
         population.append(individual)
+        
+
 
     return population
 
@@ -182,9 +217,7 @@ def main():
     generations = 2000
     #min_value = 0
     #max_value = 0.85
-    population = generate_population(size=10, w1_boundaries=(0.0002, 405424332.26), w2_boundaries=(0.00019, 131706692),
-    w3_boundaries=(0.00082, 55436546), w4_boundaries=(0, 11049981), w5_boundaries=(0, 244756190.2),
-    w6_boundaries=(0, 85395371.6), w7_boundaries=(0.00057, 34517447.3), w8_boundaries=(0, 291192077))
+    population = generate_population(size=10)
 
     i = 1
     while True:
