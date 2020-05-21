@@ -3,7 +3,7 @@ import random
 import math
 
 def generate_population(size, w1_boundaries, w2_boundaries, w3_boundaries, w4_boundaries, w5_boundaries,
-w6_boundaries, w7_boundaries, w8_boundaries):
+w6_boundaries, w7_boundaries, w8_boundaries, w9_boundaries, w10_boundaries, w11_boundaries, w12_boundaries):
     lower_w1_boundary, upper_w1_boundary = w1_boundaries
     lower_w2_boundary, upper_w2_boundary = w2_boundaries
     lower_w3_boundary, upper_w3_boundary = w3_boundaries
@@ -12,6 +12,10 @@ w6_boundaries, w7_boundaries, w8_boundaries):
     lower_w6_boundary, upper_w6_boundary = w6_boundaries
     lower_w7_boundary, upper_w7_boundary = w7_boundaries
     lower_w8_boundary, upper_w8_boundary = w8_boundaries
+    lower_w9_boundary, upper_w9_boundary = w9_boundaries
+    lower_w10_boundary, upper_w10_boundary = w10_boundaries
+    lower_w11_boundary, upper_w11_boundary = w11_boundaries
+    lower_w12_boundary, upper_w12_boundary = w12_boundaries
 
     population = []
     for i in range(size):
@@ -21,9 +25,13 @@ w6_boundaries, w7_boundaries, w8_boundaries):
             "w3": random.uniform(lower_w3_boundary, upper_w3_boundary),
             "w4": random.uniform(lower_w4_boundary, upper_w4_boundary),
             "w5": random.uniform(lower_w5_boundary, upper_w5_boundary),
-            "w6": random.uniform(lower_w3_boundary, upper_w3_boundary),
-            "w7": random.uniform(lower_w4_boundary, upper_w4_boundary),
-            "w8": random.uniform(lower_w5_boundary, upper_w5_boundary),
+            "w6": random.uniform(lower_w6_boundary, upper_w6_boundary),
+            "w7": random.uniform(lower_w7_boundary, upper_w7_boundary),
+            "w8": random.uniform(lower_w8_boundary, upper_w8_boundary),
+            "w9": random.uniform(lower_w9_boundary, upper_w9_boundary),
+            "w10": random.uniform(lower_w10_boundary, upper_w10_boundary),
+            "w11": random.uniform(lower_w11_boundary, upper_w11_boundary),
+            "w12": random.uniform(lower_w12_boundary, upper_w12_boundary),
         }
         population.append(individual)
 
@@ -37,9 +45,11 @@ def apply_function(individual):
     x5 = -0.0174
     x6 = 0.4339
     x7 = -0.21
-    x8 = 0.0636    
-    alfa_1 = -5143.9736
-    alfa_2 = 50229.0441
+    x8 = 0.0636
+    x9 = -0.205
+    x10 = -0.0174
+    x11 = 0.4339
+    x12 = -0.21    
     w1_i = 1661333
     w2_i = 543588.624
     w3_i = 306677.854
@@ -48,6 +58,10 @@ def apply_function(individual):
     w6_i = 295234.827
     w7_i = 137285.752
     w8_i = 635649.436
+    w9_i = 901510.1974
+    w10_i = 295234.827
+    w11_i = 137285.752
+    w12_i = 635649.436
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
@@ -56,8 +70,12 @@ def apply_function(individual):
     w6 = individual["w6"]
     w7 = individual["w7"]
     w8 = individual["w8"]
-    numerator_i = (alfa_1 + (w1_i*x1) + (w2_i*x2) + (w3_i*x3) + (w4_i*x4))
-    denominator_i = (alfa_2 + (w5_i*x5) + (w6_i*x6) + (w7_i*x7) + (w8_i*x8))
+    w9 = individual["w9"]
+    w10 = individual["w10"]
+    w11 = individual["w11"]
+    w12 = individual["w12"]
+    numerator_i = ((w1_i*x1) + (w2_i*x2) + (w3_i*x3) + (w4_i*x4))
+    denominator_i = ((w5_i*x5) + (w6_i*x6) + (w7_i*x7) + (w8_i*x8))
     numerator = (alfa_1 + (w1*x1) + (w2*x2) + (w3*x3) + (w4*x4))
     denominator = (alfa_2 + (w5*x5) + (w6*x6) + (w7*x7) + (w8*x8))
     function_costo1 = numerator_i/denominator_i
