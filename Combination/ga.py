@@ -4,20 +4,28 @@ import math
 import pandas as pd
 import numpy as np
 
-class Correlaciones:
-    x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    ufcf = np.empty(1)
-    dfcf = np.empty(1)
-    max_D = {} 
+x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+ufcf = 0.0
+dfcf = 0.0
+
+class boundaries:
+    max_D = {}
     min_D = {}
     max_N = {}
     min_N = {}
 
+    def __init__(self, max_D, min_D, max_N, min_N): 
+        self.max_D = max_D 
+        self.min_D = min_D
+        self.max_N = max_N
+        self.min_N = min_N
 
 def read_csv():
     #Leyendo archivo
     df = pd.read_csv('InterpolatedWithCAPEX2.csv')
     df_N = pd.read_csv('InterpolatedNum.csv')
+    global ufcf, dfcf
+    global x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12
     max_D = {'D REVENUE':df['D REVENUE'].max(), 'U CR':df['U CR'].max(), 'D OE':df['D OE'].max(), 
        'D NOI':df['D NOI'].max(),'U CAPEX':df['U CAPEX'].max(), 'U CWK':df['U CWK'].max()} 
     min_D = {'D REVENUE':df['D REVENUE'].min(), 'U CR':df['U CR'].min(), 'D OE':df['D OE'].min(), 
@@ -26,16 +34,18 @@ def read_csv():
        'U NOI':df_N['U NOI'].max(),'D CAPEX':df_N['D CAPEX'].max(), 'D CWK':df_N['D CWK'].max()} 
     min_N = {'U REVENUE':df_N['U REVENUE'].min(), 'D CR':df_N['D CR'].min(), 'U OE':df_N['U OE'].min(), 
        'U NOI':df_N['U NOI'].min(),'D CAPEX':df_N['D CAPEX'].min(), 'D CWK':df_N['D CWK'].min()}
-    
+   
     filas_d, columnas_d = df.count()-1, len(df.columns)-1
     dataset_D = df.values
     #Variables a pasar a la funcion generate_population
-    d_fcf = dataset_D[filas_d, columnas_d][1]
+    dfcf = float(dataset_D[filas_d, columnas_d][1])
     filas_n, columnas_n = df_N.count()-1, len(df_N.columns)-1
     dataset_N = df_N.values
-    u_fcf = dataset_N[filas_d, columnas_d][1]
-    ##Falta idear una forma en la que se pueda pasar u_fcf y d_fcf a apply function que no se por parametro
-
+    ufcf = float(dataset_N[filas_d, columnas_d][1])
+    
+    boundaries_x = boundaries(max_D, min_D, max_N, min_N)
+        
+    
     ##Calculo de las x
     x1 = df_N['U REVENUE'].corr(df_N['U FCF'])
     x2 = df_N['D CR'].corr(df_N['U FCF'])
@@ -50,65 +60,34 @@ def read_csv():
     x11 = df['U CAPEX'].corr(df['D FCF'])
     x12 = df['U CWK'].corr(df['D FCF'])
 
-    correlaciones_x = Correlaciones()
-    correlaciones_x.x1 = x1
-    correlaciones_x.x2 = x2
-    correlaciones_x.x3 = x3
-    correlaciones_x.x4 = x4
-    correlaciones_x.x5 = x5
-    correlaciones_x.x6 = x6
-    correlaciones_x.x7 = x7
-    correlaciones_x.x8 = x8
-    correlaciones_x.x9 = x9
-    correlaciones_x.x10 = x10
-    correlaciones_x.x11 = x11
-    correlaciones_x.x12 = x12
-    correlaciones_x.dfcf = d_fcf
-    correlaciones_x.ufcf = u_fcf
-    correlaciones_x.max_D = max_D
-    correlaciones_x.min_D = min_D
-    correlaciones_x.max_N = max_N
-    correlaciones_x.min_N = min_N
-    
-    return correlaciones_x
+    return boundaries_x
 
-def generate_population(correlaciones_x, size):
+
+def generate_population(boundarie, size):
     population = []
+    min_N = boundarie.min_N
+    max_N = boundarie.max_N
+    min_D = boundarie.min_D
+    max_D = boundarie.max_D
     for i in range(size):
         individual = {
-            "w1": random.uniform(correlaciones_x.min_N['U REVENUE'], correlaciones_x.max_N['U REVENUE']),
-            "w2": random.uniform(correlaciones_x.min_N['D CR'], correlaciones_x.max_N['D CR']),
-            "w3": random.uniform(correlaciones_x.min_N['U OE'], correlaciones_x.max_N['U OE']),
-            "w4": random.uniform(correlaciones_x.min_N['U NOI'], correlaciones_x.max_N['U NOI']),
-            "w5": random.uniform(correlaciones_x.min_N['D CAPEX'], correlaciones_x.max_N['D CAPEX']),
-            "w6": random.uniform(correlaciones_x.min_N['D CWK'], correlaciones_x.max_N['D CWK']),
-            "w7": random.uniform(correlaciones_x.min_D['D REVENUE'], correlaciones_x.max_D['D REVENUE']),
-            "w8": random.uniform(correlaciones_x.min_D['U CR'], correlaciones_x.max_D['U CR']),
-            "w9": random.uniform(correlaciones_x.min_D['D OE'], correlaciones_x.max_D['D OE']),
-            "w10": random.uniform(correlaciones_x.min_D['D NOI'], correlaciones_x.max_D['D NOI']),
-            "w11": random.uniform(correlaciones_x.min_D['U CAPEX'], correlaciones_x.max_D['U CAPEX']),
-            "w12": random.uniform(correlaciones_x.min_D['U CWK'], correlaciones_x.max_D['U CWK']),
-            "dfcf": correlaciones_x.dfcf,
-            "ufcf": correlaciones_x.ufcf,
-            "x1":correlaciones_x.x1,
-            "x2":correlaciones_x.x2,
-            "x3":correlaciones_x.x3,
-            "x4":correlaciones_x.x4,
-            "x5":correlaciones_x.x5,
-            "x6":correlaciones_x.x6,
-            "x7":correlaciones_x.x7,
-            "x8":correlaciones_x.x8,
-            "x9":correlaciones_x.x9,
-            "x10":correlaciones_x.x10,
-            "x11":correlaciones_x.x11,
-            "x12":correlaciones_x.x12 
-        }
+            "w1": random.uniform(min_N['U REVENUE'], max_N['U REVENUE']),
+            "w2": random.uniform(min_N['D CR'], max_N['D CR']),
+            "w3": random.uniform(min_N['U OE'], max_N['U OE']),
+            "w4": random.uniform(min_N['U NOI'], max_N['U NOI']),
+            "w5": random.uniform(min_N['D CAPEX'], max_N['D CAPEX']),
+            "w6": random.uniform(min_N['D CWK'], max_N['D CWK']),
+            "w7": random.uniform(min_D['D REVENUE'], max_D['D REVENUE']),
+            "w8": random.uniform(min_D['U CR'], max_D['U CR']),
+            "w9": random.uniform(min_D['D OE'], max_D['D OE']),
+            "w10": random.uniform(min_D['D NOI'], max_D['D NOI']),
+            "w11": random.uniform(min_D['U CAPEX'], max_D['U CAPEX']),
+            "w12": random.uniform(min_D['U CWK'], max_D['U CWK']),
+        }    
         population.append(individual)
     return population
 
 def apply_function(individual):
-    ufcf = np.empty(1)
-    dfcf = np.empty(1)
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
@@ -121,26 +100,10 @@ def apply_function(individual):
     w10 = individual["w10"]
     w11 = individual["w11"]
     w12 = individual["w12"]
-    ufcf = individual["ufcf"]
-    dfcf = individual["dfcf"]
-    x1 = individual["x1"]
-    x2 = individual["x2"]
-    x3 = individual["x3"]
-    x4 = individual["x4"]
-    x5 = individual["x5"]
-    x6 = individual["x6"]
-    x7 = individual["x7"]
-    x8 = individual["x8"]
-    x9 = individual["x9"]
-    x10 = individual["x10"]
-    x11 = individual["x11"]
-    x12 = individual["x11"]
     numerator = ((w1*x1) + (w2*x2) + (w3*x3) + (w4*x4) + (w5*x5) + (w6*x6))
     denominator = ((w7*x7) + (w8*x8) + (w9*x9) + (w10*x10) + (w11*x11) + (w12*x12))
     function_costo1 = ufcf/dfcf
-    #print(function_costo1)
     function_costo2 = numerator/denominator
-    #print(function_costo2)
     function_result = (function_costo2 - function_costo1)/function_costo1
     return function_result
 
@@ -203,8 +166,8 @@ def crossover(individual_a, individual_b):
 
 
 def mutate(individual):
-    min_value = -0.05
-    max_value = 0.05
+    min_value = -0.1
+    max_value = 0.1
     next_w1 = individual["w1"] + random.uniform(min_value, max_value)
     next_w2 = individual["w2"] + random.uniform(min_value, max_value)
     next_w3 = individual["w3"] + random.uniform(min_value, max_value)
@@ -256,8 +219,8 @@ def main():
     #min_value = 0
     #max_value = 0.85
     #No estoy seguro pero creo necesito verificacion por parte de otro programador gracias
-    correlaciones_obj = read_csv()
-    population = generate_population(correlaciones_x=correlaciones_obj, size=10)
+    boundaries_x = read_csv()    
+    population = generate_population(boundarie=boundaries_x, size=10)
 
     i = 1
     while True:
