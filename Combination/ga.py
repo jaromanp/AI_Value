@@ -3,6 +3,8 @@ import random
 import math
 import pandas as pd
 import numpy as np
+from keras.models import model_from_json
+from numpy import array
 
 x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 ufcf = 0.0
@@ -88,6 +90,13 @@ def generate_population(boundarie, size):
     return population
 
 def apply_function(individual):
+    # load json and create model
+    json_file = open('modelnum.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
+    # load weights into new model
+    loaded_model.load_weights("modelnum.h5")
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
