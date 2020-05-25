@@ -9,6 +9,10 @@ from numpy import array
 x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 ufcf = 0.0
 dfcf = 0.0
+max_D = {}
+min_D = {}
+max_N = {}
+min_N = {}
 
 class boundaries:
     max_D = {}
@@ -24,9 +28,9 @@ class boundaries:
 
 def read_csv():
     #Leyendo archivo
-    df = pd.read_csv('InterpolatedWithCAPEX2.csv')
-    df_N = pd.read_csv('InterpolatedNum.csv')
-    global ufcf, dfcf
+    df = pd.read_csv('Interpolation/InterpolatedDenMonth.csv')
+    df_N = pd.read_csv('Interpolation/InterpolatedNumMonth.csv')
+    global ufcf, dfcf, max_D, max_N, min_D, min_N
     global x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12
     max_D = {'D REVENUE':df['D REVENUE'].max(), 'U CR':df['U CR'].max(), 'D OE':df['D OE'].max(), 
        'D NOI':df['D NOI'].max(),'U CAPEX':df['U CAPEX'].max(), 'U CWK':df['U CWK'].max()} 
@@ -90,13 +94,21 @@ def generate_population(boundarie, size):
     return population
 
 def apply_function(individual):
+    # Numerador
     # load json and create model
     json_file = open('modelnum.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
-    loaded_model = model_from_json(loaded_model_json)
+    loaded_model_num = model_from_json(loaded_model_json)
     # load weights into new model
-    loaded_model.load_weights("modelnum.h5")
+    loaded_model_num.load_weights("modelnum.h5")
+    # Denominador
+    json_file = open('modelden.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model_den = model_from_json(loaded_model_json)
+    # load weights into new model
+    loaded_model_den.load_weights("modelden.h5")
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
@@ -109,10 +121,27 @@ def apply_function(individual):
     w10 = individual["w10"]
     w11 = individual["w11"]
     w12 = individual["w12"]
-    numerator = ((w1*x1) + (w2*x2) + (w3*x3) + (w4*x4) + (w5*x5) + (w6*x6))
-    denominator = ((w7*x7) + (w8*x8) + (w9*x9) + (w10*x10) + (w11*x11) + (w12*x12))
+    w1_std = (w1-min_N['U REVENUE'])/(max_N['U REVENUE']-min_N['U REVENUE'])
+    w2_std = (w2-min_N['D CR'])/(max_N['D CR']-min_N['D CR'])
+    w3_std = (w3-min_N['U OE'])/(max_N['U OE']-min_N['U OE'])
+    w4_std = (w4-min_N['U NOI'])/(max_N['U NOI']-min_N['U NOI'])
+    w5_std = (w5-min_N['D CAPEX'])/(max_N['D CAPEX']-min_N['D CAPEX'])
+    w6_std = (w6-min_N['D CWK'])/(max_N['D CWK']-min_N['D CWK'])
+    w7_std = (w7-min_D['D REVENUE'])/(max_D['D REVENUE']-min_D['D REVENUE'])
+    w8_std = (w8-min_D['U CR'])/(max_D['U CR']-min_D['U CR'])
+    w9_std = (w9-min_D['D OE'])/(max_D['D OE']-min_D['D OE'])
+    w10_std = (w10-min_D['D NOI'])/(max_D['D NOI']-min_D['D NOI'])
+    w11_std = (w11-min_D['U CAPEX'])/(max_D['U CAPEX']-min_D['U CAPEX'])
+    w12_std = (w12-min_D['U CWK'])/(max_D['U CWK']-min_D['U CWK'])
+    w_numerador = [[w1_std, w2_std, w3_std, w4_std, w5_std, w6_std]]
+    w_denominador = [[w7_std, w8_std, w9_std, w10_std, w11_std, w12_std]]
+    Xnewnum = array(w_numerador)
+    Xnewden = array(w_denominador)
+    # make a prediction
+    numerador = loaded_model_num.predict(Xnewnum) 
+    denominador = loaded_model_den.predict(Xnewden) 
     function_costo1 = ufcf/dfcf
-    function_costo2 = numerator/denominator
+    function_costo2 = numerador/denominador
     function_result = (function_costo2 - function_costo1)/function_costo1
     return function_result
 
@@ -175,32 +204,21 @@ def crossover(individual_a, individual_b):
 
 
 def mutate(individual):
-    min_value = -0.1
-    max_value = 0.1
-    next_w1 = individual["w1"] + random.uniform(min_value, max_value)
-    next_w2 = individual["w2"] + random.uniform(min_value, max_value)
-    next_w3 = individual["w3"] + random.uniform(min_value, max_value)
-    next_w4 = individual["w4"] + random.uniform(min_value, max_value)
-    next_w5 = individual["w5"] + random.uniform(min_value, max_value)
-    next_w6 = individual["w6"] + random.uniform(min_value, max_value)
-    next_w7 = individual["w7"] + random.uniform(min_value, max_value)
-    next_w8 = individual["w8"] + random.uniform(min_value, max_value)
-    next_w9 = individual["w9"] + random.uniform(min_value, max_value)
-    next_w10 = individual["w10"] + random.uniform(min_value, max_value)
-    next_w11 = individual["w11"] + random.uniform(min_value, max_value)
-    next_w12 = individual["w12"] + random.uniform(min_value, max_value)
-
-    #lower_boundary, upper_boundary = (0, 1)
-
-    # Guarantee we keep inside boundaries
-    # next_w1 = min(max(next_w1, individual[]), 405424332.26)
-    # next_w2 = min(max(next_w2, 0.00019), 131706692)
-    # next_w3 = min(max(next_w3, 0.00082), 55436546)
-    # next_w4 = min(max(next_w4, 0), 11049981)
-    # next_w5 = min(max(next_w5, 0), 244756190.2)
-    # next_w6 = min(max(next_w6, 0), 85395371.6)
-    # next_w7 = min(max(next_w7, 0.00057), 34517447.3)
-    # next_w8 = min(max(next_w8, 0), 291192077)
+    min_value = -0.05
+    max_value = 0.05
+    next_w1 = individual["w1"] * (1+random.uniform(min_value, max_value)) 
+    next_w2 = individual["w2"] * (1+random.uniform(min_value, max_value))
+    next_w3 = individual["w3"] * (1+random.uniform(min_value, max_value))
+    next_w4 = individual["w4"] * (1+random.uniform(min_value, max_value))
+    next_w5 = individual["w5"] * (1+random.uniform(min_value, max_value))
+    next_w6 = individual["w6"] * (1+random.uniform(min_value, max_value))
+    next_w7 = individual["w7"] * (1+random.uniform(min_value, max_value))
+    next_w8 = individual["w8"] * (1+random.uniform(min_value, max_value))
+    next_w9 = individual["w9"] * (1+random.uniform(min_value, max_value))
+    next_w10 = individual["w10"] * (1+random.uniform(min_value, max_value))
+    next_w11 = individual["w11"] * (1+random.uniform(min_value, max_value))
+    next_w12 = individual["w12"] * (1+random.uniform(min_value, max_value))
+  
 
     result_mutation = {"w1": next_w1, "w2": next_w2, "w3": next_w3, "w4": next_w4, "w5": next_w5,
     "w6": next_w6, "w7": next_w7, "w8": next_w8, "w9": next_w9, "w10": next_w10, "w11": next_w11, "w12": next_w12}
@@ -224,7 +242,7 @@ def make_next_generation(previous_population):
     return next_generation
 
 def main():
-    generations = 2000
+    generations = 1000
     #min_value = 0
     #max_value = 0.85
     #No estoy seguro pero creo necesito verificacion por parte de otro programador gracias
@@ -233,10 +251,10 @@ def main():
 
     i = 1
     while True:
-        #print(f"🧬 GENERATION {i}")
+        # print(f"🧬 GENERATION {i}")
 
-        #for individual in population:
-        #    print(individual, apply_function(individual))
+        # for individual in population:
+        #     print(individual, apply_function(individual))
 
         if i == generations:
             break
