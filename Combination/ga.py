@@ -218,18 +218,7 @@ def mutate(individual):
     next_w10 = individual["w10"] * (1+random.uniform(min_value, max_value))
     next_w11 = individual["w11"] * (1+random.uniform(min_value, max_value))
     next_w12 = individual["w12"] * (1+random.uniform(min_value, max_value))
-
-    #lower_boundary, upper_boundary = (0, 1)
-
-    # Guarantee we keep inside boundaries
-    # next_w1 = min(max(next_w1, individual[]), 405424332.26)
-    # next_w2 = min(max(next_w2, 0.00019), 131706692)
-    # next_w3 = min(max(next_w3, 0.00082), 55436546)
-    # next_w4 = min(max(next_w4, 0), 11049981)
-    # next_w5 = min(max(next_w5, 0), 244756190.2)
-    # next_w6 = min(max(next_w6, 0), 85395371.6)
-    # next_w7 = min(max(next_w7, 0.00057), 34517447.3)
-    # next_w8 = min(max(next_w8, 0), 291192077)
+  
 
     result_mutation = {"w1": next_w1, "w2": next_w2, "w3": next_w3, "w4": next_w4, "w5": next_w5,
     "w6": next_w6, "w7": next_w7, "w8": next_w8, "w9": next_w9, "w10": next_w10, "w11": next_w11, "w12": next_w12}
