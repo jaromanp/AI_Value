@@ -139,10 +139,11 @@ def apply_function(individual):
     Xnewden = array(w_denominador)
     # make a prediction
     numerador = loaded_model_num.predict(Xnewnum) 
-    denominador = loaded_model_den.predict(Xnewden) 
+    denominador = loaded_model_den.predict(Xnewden)
     function_costo1 = ufcf/dfcf
     function_costo2 = numerador/denominador
-    function_result = (function_costo2 - function_costo1)/function_costo1
+    function_costo2num = function_costo2[0][0]
+    function_result = (function_costo2num - function_costo1)/function_costo1
     return function_result
 
 def choice_by_roulette(sorted_population, fitness_sum):
@@ -218,7 +219,6 @@ def mutate(individual):
     next_w10 = individual["w10"] * (1+random.uniform(min_value, max_value))
     next_w11 = individual["w11"] * (1+random.uniform(min_value, max_value))
     next_w12 = individual["w12"] * (1+random.uniform(min_value, max_value))
-  
 
     result_mutation = {"w1": next_w1, "w2": next_w2, "w3": next_w3, "w4": next_w4, "w5": next_w5,
     "w6": next_w6, "w7": next_w7, "w8": next_w8, "w9": next_w9, "w10": next_w10, "w11": next_w11, "w12": next_w12}
@@ -254,7 +254,7 @@ def main():
         print(f"🧬 GENERATION {i}")
 
         for individual in population:
-            print(individual, apply_function(individual))
+             print(individual, apply_function(individual))
 
         if i == generations:
             break
@@ -266,6 +266,7 @@ def main():
     best_individual = sort_population_by_fitness(population)[-1]
     print("\n🔬 FINAL RESULT")
     print(best_individual, (apply_function(best_individual)*100), "%")
+
 
 if __name__ == "__main__":
     main()
