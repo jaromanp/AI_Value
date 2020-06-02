@@ -204,8 +204,8 @@ def crossover(individual_a, individual_b):
 
 
 def mutate(individual):
-    min_value = -0.05
-    max_value = 0.05
+    min_value = -1
+    max_value = 1
     next_w1 = individual["w1"] * (1+random.uniform(min_value, max_value)) 
     next_w2 = individual["w2"] * (1+random.uniform(min_value, max_value))
     next_w3 = individual["w3"] * (1+random.uniform(min_value, max_value))
@@ -242,7 +242,7 @@ def make_next_generation(previous_population):
     return next_generation
 
 def main():
-    generations = 1000
+    generations = 10
     #min_value = 0
     #max_value = 0.85
     #No estoy seguro pero creo necesito verificacion por parte de otro programador gracias
@@ -251,10 +251,10 @@ def main():
 
     i = 1
     while True:
-        # print(f"🧬 GENERATION {i}")
+        print(f"🧬 GENERATION {i}")
 
-        # for individual in population:
-        #     print(individual, apply_function(individual))
+        for individual in population:
+            print(individual, apply_function(individual))
 
         if i == generations:
             break
