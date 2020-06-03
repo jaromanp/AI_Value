@@ -14,6 +14,8 @@ import random
 import math
 import pandas as pd
 import numpy as np
+from keras import backend as K
+import tensorflow as tf
 
 x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 ufcf = 0.0
@@ -131,14 +133,14 @@ def apply_function(individual):
     json_file.close()
     loaded_model_num = model_from_json(loaded_model_json)
     # load weights into new model
-    loaded_model_num.load_weights("modelnum.h5")
+    loaded_model_num = tf.keras.models.load_model("modelnum.h5")
     # Denominador
     json_file = open('modelden.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model_den = model_from_json(loaded_model_json)
     # load weights into new model
-    loaded_model_den.load_weights("modelden.h5")
+    loaded_model_den = tf.keras.models.load_model("modelden.h5")
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
@@ -168,8 +170,10 @@ def apply_function(individual):
     Xnewnum = array(w_numerador)
     Xnewden = array(w_denominador)
     # make a prediction
+    K.clear_session()
     numerador = loaded_model_num.predict(Xnewnum) 
     denominador = loaded_model_den.predict(Xnewden)
+    K.clear_session()
     function_costo1 = ufcf/dfcf
     function_costo2 = numerador/denominador
     function_costo2num = function_costo2[0][0]
