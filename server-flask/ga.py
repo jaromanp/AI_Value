@@ -3,6 +3,7 @@ import math
 import pandas as pd
 import numpy as np
 from keras.models import model_from_json
+from tensorflow.keras.models import load_model
 from numpy import array
 
 x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
@@ -250,6 +251,10 @@ def get_best_individual():
 
     i = 1
     while True:
+        # print(f"🧬 GENERATION {i}")
+
+        # for individual in population:
+        #      print(individual, apply_function(individual))
         if i == generations:
             break
         i += 1
