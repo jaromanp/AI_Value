@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+from ga import get_best_individual
+
 
 app = Flask(__name__)
 
@@ -7,9 +9,19 @@ app = Flask(__name__)
 def process():
     content = request.json
     data = content["data"]
-    print(data)
-    return jsonify(request.json)
+    # print("Input data:", data)
+
+    bestindividual = get_best_individual()
+    # print(n_primes)
+    # print(primes)
+
+    result = {"bestindividual": bestindividual,
+             }
+
+    return jsonify(result)
 
 
 if __name__ == '__main__':
-    app.run(port=8000, debug=True)
+    app.run(host='0.0.0.0',
+            port=6000,
+            debug=True)
