@@ -1,0 +1,4 @@
+Django==3.0.6
+django-cors-headers==3.3.0
+django-rest-knox==4.1.0
+djangorestframework==3.11.0
