@@ -5,9 +5,12 @@ import numpy as np
 from keras.models import model_from_json
 from numpy import array
 
+#Variables Globales
+#Variables fijas X
 x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 ufcf = 0.0
 dfcf = 0.0
+#Diccionario para máximos y minimos
 max_D = {}
 min_D = {}
 max_N = {}
@@ -31,6 +34,7 @@ def read_csv():
     df_N = pd.read_csv('Interpolation/InterpolatedNumMonth.csv')
     global ufcf, dfcf, max_D, max_N, min_D, min_N
     global x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12
+    #Creción de los diccionarios 
     max_D = {'D REVENUE':df['D REVENUE'].max(), 'U CR':df['U CR'].max(), 'D OE':df['D OE'].max(), 
        'D NOI':df['D NOI'].max(),'U CAPEX':df['U CAPEX'].max(), 'U CWK':df['U CWK'].max()} 
     min_D = {'D REVENUE':df['D REVENUE'].min(), 'U CR':df['U CR'].min(), 'D OE':df['D OE'].min(), 
@@ -93,6 +97,7 @@ def generate_population(boundarie, size):
     return population
 
 def apply_function(individual):
+    #Seccion en la que se carga la red neuronal
     # Numerador
     # load json and create model
     json_file = open('modelnum.json', 'r')
@@ -120,6 +125,7 @@ def apply_function(individual):
     w10 = individual["w10"]
     w11 = individual["w11"]
     w12 = individual["w12"]
+    #Estandarización de los W
     w1_std = (w1-min_N['U REVENUE'])/(max_N['U REVENUE']-min_N['U REVENUE'])
     w2_std = (w2-min_N['D CR'])/(max_N['D CR']-min_N['D CR'])
     w3_std = (w3-min_N['U OE'])/(max_N['U OE']-min_N['U OE'])
@@ -136,7 +142,7 @@ def apply_function(individual):
     w_denominador = [[w7_std, w8_std, w9_std, w10_std, w11_std, w12_std]]
     Xnewnum = array(w_numerador)
     Xnewden = array(w_denominador)
-    # make a prediction
+    # Generar la prediccion por medio de la red neuronal
     numerador = loaded_model_num.predict(Xnewnum) 
     denominador = loaded_model_den.predict(Xnewden)
     function_costo1 = ufcf/dfcf
@@ -242,9 +248,6 @@ def make_next_generation(previous_population):
 
 def get_best_individual():
     generations = 2
-    #min_value = 0
-    #max_value = 0.85
-    #No estoy seguro pero creo necesito verificacion por parte de otro programador gracias
     boundaries_x = read_csv()    
     population = generate_population(boundarie=boundaries_x, size=10)
 

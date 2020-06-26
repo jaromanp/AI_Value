@@ -18,7 +18,7 @@ import numpy as np
 from keras import backend as K
 import tensorflow as tf
 
-
+#Clase que invoca el algoritmo genetico 
 class Predict(APIView):
     def post(self, request):
         bestindividual = get_best_individual()
