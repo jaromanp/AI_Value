@@ -5,7 +5,7 @@
 Juan Camilo Vanegas Pinto
 jvaneg22@eafit.edu.co
 
-**Desarrolladores**
+**Desarrolladores** <br>
 Alejandra Cárdenas Montoya
 acarden6@eafit.edu.co,
 acarden100@gmail.com
@@ -35,11 +35,14 @@ Otros metodos usados al principio del proyecto
 ## Repositorio del servidor Backend
 En el siguiente link se encuentra el repositorio del servidor Back end, usado para la autenticación y el guardado de datos.
 Para esta parte del proyecto se uso [django](https://www.djangoproject.com/) y como base de datos se uso MySQL
+<br>
 [Link](https://github.com/lsanchezc613/AI-Value-Server)
 
 ## Repositorio del servidor Frontend
 En el siguiente link se encuentra una parte del front end, contiene vista principales, de login y de register, estas no pudieron ser probadas con el servidor back desplegado en AWS, y su ejecucion solo ha sido posible en entorno nativo en windows se recomienda reestructuración o desarrollo desde 0 con otra tecnologia.
 Se uso el framework [React](https://es.reactjs.org/)
+<br>
+[Link](https://github.com/mflorezr/Aifront)
 ### Aclaraciones y advertencias
 La parte del dashboard que se estaba desarrollando se perdio, no obstante para la graficación se uso la libreria [chart.js](https://www.chartjs.org/), se recomienda seguir con esta en un futuro desarrollo de esta parte del front, se recomienda cambiar React por un framework más conocido por lo desarrollores o más facil de usar como por ejemplo [Vue](https://vuejs.org/).
 La idea para integración de Front y Back es comunicacion meramente por API - REST,  tomando provecho de la parte del back ya realizada en la que se comprobo su funcionamiento mediante postman al igual que la parte del algoritmo que ya tambien esta implementada como servicio API
