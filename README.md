@@ -31,3 +31,25 @@ En esta carpeta se encuentran los esqueletos de los metodos de interpolación, a
 Archivos csv para la interpolación y versiones previas de esta
 ### [Varios intentos](https://github.com/jaromanp/AI_Value/tree/master/Varios%20Intentos)
 Otros metodos usados al principio del proyecto
+
+## Repositorio del servidor Backend
+En el siguiente link se encuentra el repositorio del servidor Back end, usado para la autenticación y el guardado de datos.
+Para esta parte del proyecto se uso [django](https://www.djangoproject.com/) y como base de datos se uso MySQL
+[Link](https://github.com/lsanchezc613/AI-Value-Server)
+
+## Repositorio del servidor Frontend
+En el siguiente link se encuentra una parte del front end, contiene vista principales, de login y de register, estas no pudieron ser probadas con el servidor back desplegado en AWS, y su ejecucion solo ha sido posible en entorno nativo en windows se recomienda reestructuración o desarrollo desde 0 con otra tecnologia.
+Se uso el framework [React](https://es.reactjs.org/)
+### Aclaraciones y advertencias
+La parte del dashboard que se estaba desarrollando se perdio, no obstante para la graficación se uso la libreria [chart.js](https://www.chartjs.org/), se recomienda seguir con esta en un futuro desarrollo de esta parte del front, se recomienda cambiar React por un framework más conocido por lo desarrollores o más facil de usar como por ejemplo [Vue](https://vuejs.org/).
+La idea para integración de Front y Back es comunicacion meramente por API - REST,  tomando provecho de la parte del back ya realizada en la que se comprobo su funcionamiento mediante postman al igual que la parte del algoritmo que ya tambien esta implementada como servicio API
+
+### Partes pendientes
+- Comunicación entre los servicios
+- Automatización de la entrada de datos
+- Re-entrenamiento de la red neuronal con los datos de cada usuario 
+- Gran parte del front end
+- Tranformaciones de los datos automatica
+- Modificación del algoritmo genetico para trabajar con los datos especificos del cliente
+- Posible optimizacion del algoritmo genetico con paralelizacion 
+
