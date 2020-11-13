@@ -2,6 +2,7 @@ import random
 import math
 import pandas as pd
 import numpy as np
+import json
 from keras.models import model_from_json
 from numpy import array
 
@@ -27,18 +28,20 @@ class boundaries:
 
 def read_csv():
     #Leyendo archivo
-    df = pd.read_csv('Interpolation/InterpolatedDenMonth.csv')
-    df_N = pd.read_csv('Interpolation/InterpolatedNumMonth.csv')
+    df = pd.read_csv('Interpolation/CHKP/InterpolatedDenWeekCHKP.csv')
+    df_N = pd.read_csv('Interpolation/CHKP/InterpolatedNumWeekCHKP.csv')
     global ufcf, dfcf, max_D, max_N, min_D, min_N
     global x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12
-    max_D = {'D REVENUE':df['D REVENUE'].max(), 'U CR':df['U CR'].max(), 'D OE':df['D OE'].max(), 
-       'D NOI':df['D NOI'].max(),'U CAPEX':df['U CAPEX'].max(), 'U CWK':df['U CWK'].max()} 
-    min_D = {'D REVENUE':df['D REVENUE'].min(), 'U CR':df['U CR'].min(), 'D OE':df['D OE'].min(), 
-       'D NOI':df['D NOI'].min(),'U CAPEX':df['U CAPEX'].min(), 'U CWK':df['U CWK'].min()}
-    max_N = {'U REVENUE':df_N['U REVENUE'].max(), 'D CR':df_N['D CR'].max(), 'U OE':df_N['U OE'].max(), 
-       'U NOI':df_N['U NOI'].max(),'D CAPEX':df_N['D CAPEX'].max(), 'D CWK':df_N['D CWK'].max()} 
-    min_N = {'U REVENUE':df_N['U REVENUE'].min(), 'D CR':df_N['D CR'].min(), 'U OE':df_N['U OE'].min(), 
-       'U NOI':df_N['U NOI'].min(),'D CAPEX':df_N['D CAPEX'].min(), 'D CWK':df_N['D CWK'].min()}
+    #Denominador
+    max_D = {'D Revenue':df['D Revenue'].max(), 'U CR':df['U CR'].max(), 'D OE':df['D OE'].max(), 
+       'U NOI':df['U NOI'].max(),'U CAPEX':df['U CAPEX'].max(), 'U WK':df['U WK'].max()} 
+    min_D = {'D Revenue':df['D Revenue'].min(), 'U CR':df['U CR'].min(), 'D OE':df['D OE'].min(), 
+       'U NOI':df['U NOI'].min(),'U CAPEX':df['U CAPEX'].min(), 'U WK':df['U WK'].min()}
+    #Numerador
+    max_N = {'U Revenue':df_N['U Revenue'].max(), 'D CR':df_N['D CR'].max(), 'U OE':df_N['U OE'].max(), 
+       'D NOI':df_N['D NOI'].max(),'D CAPEX':df_N['D CAPEX'].max(), 'D WK':df_N['D WK'].max()} 
+    min_N = {'U Revenue':df_N['U Revenue'].min(), 'D CR':df_N['D CR'].min(), 'U OE':df_N['U OE'].min(), 
+       'D NOI':df_N['D NOI'].min(),'D CAPEX':df_N['D CAPEX'].min(), 'D WK':df_N['D WK'].min()}
    
     filas_d, columnas_d = df.count()-1, len(df.columns)-1
     dataset_D = df.values
@@ -52,18 +55,20 @@ def read_csv():
         
     
     ##Calculo de las x
-    x1 = df_N['U REVENUE'].corr(df_N['U FCF'])
+    #Numerador
+    x1 = df_N['U Revenue'].corr(df_N['U FCF'])
     x2 = df_N['D CR'].corr(df_N['U FCF'])
     x3 = df_N['U OE'].corr(df_N['U FCF'])
-    x4 = df_N['U NOI'].corr(df_N['U FCF'])
+    x4 = df_N['D NOI'].corr(df_N['U FCF'])
     x5 = df_N['D CAPEX'].corr(df_N['U FCF'])
-    x6 = df_N['D CWK'].corr(df_N['U FCF'])
-    x7 = df['D REVENUE'].corr(df['D FCF'])
+    x6 = df_N['D WK'].corr(df_N['U FCF'])
+    x7 = df['D Revenue'].corr(df['D FCF'])
+    #Denominador
     x8 = df['U CR'].corr(df['D FCF'])
     x9 = df['D OE'].corr(df['D FCF'])
-    x10 = df['D NOI'].corr(df['D FCF'])
+    x10 = df['U NOI'].corr(df['D FCF'])
     x11 = df['U CAPEX'].corr(df['D FCF'])
-    x12 = df['U CWK'].corr(df['D FCF'])
+    x12 = df['U WK'].corr(df['D FCF'])
 
     return boundaries_x
 
@@ -94,20 +99,22 @@ def generate_population(boundarie, size):
 
 def apply_function(individual):
     # Numerador
+    # load json and create model 
+    # Numerador
     # load json and create model
-    json_file = open('modelnum.json', 'r')
+    json_file = open('C:/Users/alejo/Documents/Proyecto_Integrador_2/AI_Value/Combination/Interpolation/CHKP/modelNumCHKP.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model_num = model_from_json(loaded_model_json)
     # load weights into new model
-    loaded_model_num.load_weights("modelnum.h5")
+    loaded_model_num.load_weights('C:/Users/alejo/Documents/Proyecto_Integrador_2/AI_Value/Combination/Interpolation/CHKP/modelNumCHKP.h5')
     # Denominador
-    json_file = open('modelden.json', 'r')
+    json_file = open('C:/Users/alejo/Documents/Proyecto_Integrador_2/AI_Value/Combination/Interpolation/CHKP/modeldenCHKP.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model_den = model_from_json(loaded_model_json)
     # load weights into new model
-    loaded_model_den.load_weights("modelden.h5")
+    loaded_model_den.load_weights('C:/Users/alejo/Documents/Proyecto_Integrador_2/AI_Value/Combination/Interpolation/CHKP/modeldenCHKP.h5')    
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
@@ -120,18 +127,20 @@ def apply_function(individual):
     w10 = individual["w10"]
     w11 = individual["w11"]
     w12 = individual["w12"]
-    w1_std = (w1-min_N['U REVENUE'])/(max_N['U REVENUE']-min_N['U REVENUE'])
+    #Numerador
+    w1_std = (w1-min_N['U Revenue'])/(max_N['U Revenue']-min_N['U Revenue'])
     w2_std = (w2-min_N['D CR'])/(max_N['D CR']-min_N['D CR'])
     w3_std = (w3-min_N['U OE'])/(max_N['U OE']-min_N['U OE'])
-    w4_std = (w4-min_N['U NOI'])/(max_N['U NOI']-min_N['U NOI'])
+    w4_std = (w4-min_N['D NOI'])/(max_N['D NOI']-min_N['D NOI'])
     w5_std = (w5-min_N['D CAPEX'])/(max_N['D CAPEX']-min_N['D CAPEX'])
-    w6_std = (w6-min_N['D CWK'])/(max_N['D CWK']-min_N['D CWK'])
-    w7_std = (w7-min_D['D REVENUE'])/(max_D['D REVENUE']-min_D['D REVENUE'])
+    w6_std = (w6-min_N['D WK'])/(max_N['D WK']-min_N['D WK'])
+    #Denominador
+    w7_std = (w7-min_D['D Revenue'])/(max_D['D Revenue']-min_D['D Revenue'])
     w8_std = (w8-min_D['U CR'])/(max_D['U CR']-min_D['U CR'])
     w9_std = (w9-min_D['D OE'])/(max_D['D OE']-min_D['D OE'])
-    w10_std = (w10-min_D['D NOI'])/(max_D['D NOI']-min_D['D NOI'])
+    w10_std = (w10-min_D['U NOI'])/(max_D['U NOI']-min_D['U NOI'])
     w11_std = (w11-min_D['U CAPEX'])/(max_D['U CAPEX']-min_D['U CAPEX'])
-    w12_std = (w12-min_D['U CWK'])/(max_D['U CWK']-min_D['U CWK'])
+    w12_std = (w12-min_D['U WK'])/(max_D['U WK']-min_D['U WK'])
     w_numerador = [[w1_std, w2_std, w3_std, w4_std, w5_std, w6_std]]
     w_denominador = [[w7_std, w8_std, w9_std, w10_std, w11_std, w12_std]]
     Xnewnum = array(w_numerador)
@@ -243,8 +252,7 @@ def make_next_generation(previous_population):
 def main():
     generations = 10
     #min_value = 0
-    #max_value = 0.85
-    #No estoy seguro pero creo necesito verificacion por parte de otro programador gracias
+    #max_value = 0.85    
     boundaries_x = read_csv()    
     population = generate_population(boundarie=boundaries_x, size=10)
 
