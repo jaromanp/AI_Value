@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import random
 import math
 import pandas as pd
@@ -11,9 +8,31 @@ import numpy as np
 import json
 from keras.models import model_from_json
 from numpy import array
+import pathlib
 
 
-# In[2]:
+
+# define the path
+directory = pathlib.Path('Interpolation')
+
+# define the pattern
+currentCompany = 'CHKP'
+
+for currentFile in directory.glob(currentCompany):
+    print(currentFile)
+
+
+fileNum = 'InterpolatedNumWeek' + str(currentCompany) + '.csv'
+modelNum = 'modelNum' + str(currentCompany) + '.json'
+weightsNum = 'modelNum' + str(currentCompany) + '.h5'
+#r2ScoreNum = str(currentCompany) + '_R2ScoreNum' +  '.txt'
+
+fileDen = 'InterpolatedDenWeek' + str(currentCompany) + '.csv'
+modelDen = 'modelDen' + str(currentCompany) + '.json'
+weightsDen = 'modelDen' + str(currentCompany) + '.h5'
+#r2ScoreDen = str(currentCompany) + '_R2ScoreDen' +  '.txt'
+
+
 
 
 class boundaries:
@@ -30,8 +49,8 @@ class boundaries:
 
 def read_csv():
     #Leyendo archivo
-    df = pd.read_csv('Interpolation/CHKP/InterpolatedDenWeekCHKP.csv')
-    df_N = pd.read_csv('Interpolation/CHKP/InterpolatedNumWeekCHKP.csv')
+    df = pd.read_csv(currentFile/fileDen)
+    df_N = pd.read_csv(currentFile/fileNum)
     global ufcf, dfcf, max_D, max_N, min_D, min_N
     global x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12
     #Denominador
@@ -106,19 +125,19 @@ def apply_function(individual):
     # load json and create model 
     # Numerador
     # load json and create model
-    json_file = open('/home/userai/Deployment/AI_Value/Combination/Interpolation/CHKP/modelNumCHKP.json', 'r')
+    json_file = open(currentFile/modelNum, 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model_num = model_from_json(loaded_model_json)
     # load weights into new model
-    loaded_model_num.load_weights('/home/userai/Deployment/AI_Value/Combination/Interpolation/CHKP/modelNumCHKP.h5')
+    loaded_model_num.load_weights(currentFile/weightsNum)
     # Denominador
-    json_file = open('/home/userai/Deployment/AI_Value/Combination/Interpolation/CHKP/modeldenCHKP.json', 'r')
+    json_file = open(currentFile/modelDen, 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model_den = model_from_json(loaded_model_json)
     # load weights into new model
-    loaded_model_den.load_weights('/home/userai/Deployment/AI_Value/Combination/Interpolation/CHKP/modeldenCHKP.h5')    
+    loaded_model_den.load_weights(currentFile/weightsDen)    
     w1 = individual["w1"]
     w2 = individual["w2"]
     w3 = individual["w3"]
@@ -254,9 +273,6 @@ def make_next_generation(previous_population):
     return next_generation
 
 
-# In[3]:
-
-
 def main():
     generations = 10
     boundaries_x = read_csv()    
@@ -281,14 +297,10 @@ def main():
     print(best_individual, (apply_function(best_individual)*100), "%")
 
 
-# In[ ]:
-
-
 if __name__ == "__main__":
     main()
 
 
-# In[ ]:
 
 
 
