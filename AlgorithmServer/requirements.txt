@@ -12,7 +12,7 @@ djangorestframework==3.11.0
 Flask==1.1.2
 h5py==2.10.0
 Keras==2.2.5
-numpy==1.18.4
+numpy==1.22.0
 pandas==1.0.4
 tensorflow==1.4
 
